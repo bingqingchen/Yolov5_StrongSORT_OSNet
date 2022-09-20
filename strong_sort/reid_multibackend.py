@@ -1,3 +1,4 @@
+import pdb
 import torch.nn as nn
 import torch
 from pathlib import Path
@@ -32,12 +33,14 @@ class ReIDDetectMultiBackend(nn.Module):
             self.saved_model, self.pb, self.tflite, self.edgetpu, self.tfjs = self.model_type(w)  # get backend
         fp16 &= (self.pt or self.jit or self.onnx or self.engine) and device.type != 'cpu'  # FP16
         self.fp16 = fp16
+        # pdb.set_trace()
         if self.pt:  # PyTorch
             model_name = get_model_name(weights)
             model_url = get_model_url(weights)
 
             if not file_exists(weights) and model_url is not None:
-                gdown.download(model_url, str(weights), quiet=False)
+                #pdb.set_trace()
+                gdown.download(model_url, str(weights), quiet=False, verify = False)
             elif file_exists(weights):
                 pass
             elif model_url is None:

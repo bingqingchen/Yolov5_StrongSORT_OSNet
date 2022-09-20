@@ -1,8 +1,9 @@
 # Yolov5 + StrongSORT with OSNet
 
+## Me: 
+To use the evaluation script: 
 
-
-
+`bash scripts/eval_mot16.sh reid_model detection_model`
 
 <div align="center">
 <p>

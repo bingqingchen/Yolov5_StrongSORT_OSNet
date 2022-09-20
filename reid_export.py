@@ -1,4 +1,5 @@
 import argparse
+from inspect import ArgSpec
 
 import os
 # limit the number of cpus used by high performance libraries
@@ -199,6 +200,14 @@ if __name__ == "__main__":
                         nargs='+',
                         default=['onnx', 'openvino', 'tflite'],
                         help='onnx, openvino, tflite')
+    
+    parser.add_argument(
+        '--bs', '--batch-size',
+        type=int,
+        default=1,
+        help='batch size (default=1)'
+    )
+    
     args = parser.parse_args()
 
     # Build model
@@ -215,7 +224,9 @@ if __name__ == "__main__":
     assert sum(flags) == len(include), f'ERROR: Invalid --include {include}, valid --include arguments are {fmts}'
     onnx, openvino, tflite = flags  # export booleans
     
-    im = torch.zeros(1, 3, args.imgsz[0], args.imgsz[1]).to('cpu')  # image size(1,3,640,480) BCHW iDetection
+    im = torch.zeros(args.bs, 3, args.imgsz[0], args.imgsz[1]).to('cpu')  # image size(1,3,640,480) BCHW iDetection
+    print(f"im.size = {im.shape}")
+    
     if onnx:
         f = export_onnx(extractor.model.eval(), im, args.weights, 12, train=False, dynamic=args.dynamic, simplify=True)  # opset 12
     if openvino:
