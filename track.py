@@ -71,6 +71,7 @@ def run(
         hide_class=False,  # hide IDs
         half=False,  # use FP16 half-precision inference
         dnn=False,  # use OpenCV DNN for ONNX inference
+        eval=False,  # run multi-gpu eval
 ):
 
     source = str(source)
@@ -100,7 +101,10 @@ def run(
     #(save_dir / 'tracks' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
 
     # Load model
-    device = select_device(device)
+    if eval:
+        device = torch.device(int(device))
+    else:
+        device = select_device(device)
     model = DetectMultiBackend(yolo_weights, device=device, dnn=dnn, data=None, fp16=half)
     stride, names, pt = model.stride, model.names, model.pt
     imgsz = check_img_size(imgsz, s=stride)  # check image size
@@ -118,7 +122,7 @@ def run(
 
     # initialize StrongSORT
     cfg = get_config()
-    cfg.merge_from_file(opt.config_strongsort)
+    cfg.merge_from_file(config_strongsort)
 
     # Create as many strong sort instances as there are video sources
     strongsort_list = []
@@ -316,6 +320,7 @@ def parse_opt():
     parser.add_argument('--hide-class', default=False, action='store_true', help='hide IDs')
     parser.add_argument('--half', action='store_true', help='use FP16 half-precision inference')
     parser.add_argument('--dnn', action='store_true', help='use OpenCV DNN for ONNX inference')
+    parser.add_argument('--eval', action='store_true', help='run evaluation')
     opt = parser.parse_args()
     opt.imgsz *= 2 if len(opt.imgsz) == 1 else 1  # expand
     print_args(vars(opt))

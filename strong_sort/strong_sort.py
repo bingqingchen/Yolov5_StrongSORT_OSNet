@@ -9,10 +9,11 @@ import torchvision.transforms as transforms
 from .sort.nn_matching import NearestNeighborDistanceMetric
 from .sort.detection import Detection
 from .sort.tracker import Tracker
+
+from .deep.reid.torchreid.utils import FeatureExtractor
 from .deep.reid_model_factory import show_downloadeable_models, get_model_url, get_model_name
 
-from torchreid.utils import FeatureExtractor
-from torchreid.utils.tools import download_url
+from .deep.reid.torchreid.utils.tools import download_url
 from .reid_multibackend import ReIDDetectMultiBackend
 
 __all__ = ['StrongSORT']
@@ -30,7 +31,7 @@ class StrongSORT(object):
                  mc_lambda=0.995,
                  ema_alpha=0.9
                 ):
-        
+
         self.model = ReIDDetectMultiBackend(weights=model_weights, device=device, fp16=fp16)
         
         self.max_dist = max_dist
