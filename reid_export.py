@@ -351,14 +351,11 @@ if __name__ == "__main__":
     shape = tuple((y[0] if isinstance(y, tuple) else y).shape)  # model output shape
     LOGGER.info(f"\n{colorstr('PyTorch:')} starting from {args.weights} with output shape {shape} ({file_size(args.weights):.1f} MB)")
     
-<<<<<<< HEAD
     im = torch.zeros(args.bs, 3, args.imgsz[0], args.imgsz[1]).to('cpu')  # image size(1,3,640,480) BCHW iDetection
     print(f"im.size = {im.shape}")
     
-=======
     if jit:
         export_torchscript(extractor.model.eval(), im, args.weights, optimize=True)  # opset 12
->>>>>>> 13f1ea1c26b77710789ebe7239807359641f56b7
     if onnx:
         f = export_onnx(extractor.model.eval(), im, args.weights, args.opset, train=False, dynamic=args.dynamic, simplify=args.simplify)  # opset 12
     if engine:  # ONNX required before TensorRT

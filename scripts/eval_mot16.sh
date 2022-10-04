@@ -9,8 +9,8 @@ function run_tracker(){
                     --strong-sort-weights $1.pt \
                     --classes 0 \
                     --save-txt \
-                    --save-vid \
-                    --device cpu   ## Based on allocated device
+                    --save-vid 
+                   #--device cpu   ## Based on allocated device
 }
 
 
