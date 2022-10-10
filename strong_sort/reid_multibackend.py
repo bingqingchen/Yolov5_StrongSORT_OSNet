@@ -36,6 +36,16 @@ class ReIDDetectMultiBackend(nn.Module):
         self.pt, self.jit, self.onnx, self.xml, self.engine, self.coreml, \
             self.saved_model, self.pb, self.tflite, self.edgetpu, self.tfjs = self.model_type(w)  # get backend
         self.fp16 = fp16
+        self.device = device
+        self.to_pil = T.ToPILImage()
+        self.image_size=(256, 128)
+        self.pixel_mean=[0.485, 0.456, 0.406]
+        self.pixel_std=[0.229, 0.224, 0.225]
+        self.transforms = []
+        self.transforms += [T.Resize(self.image_size)]
+        self.transforms += [T.ToTensor()]
+        self.transforms += [T.Normalize(mean=self.pixel_mean, std=self.pixel_std)]
+        self.preprocess = T.Compose(self.transforms)
 
         # pdb.set_trace()
         if self.pt:  # PyTorch

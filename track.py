@@ -45,7 +45,7 @@ def run(
         source='0',
         yolo_weights='yolov5m.pt',  # model.pt path(s),
         strong_sort_weights='osnet_x0_25_msmt17.pt',  # model.pt path,
-        config_strongsort=ROOT / 'strong_sort/configs/strong_sort.yaml',
+        config_strongsort=ROOT / 'strong_sort_no_app/configs/strong_sort.yaml',
         imgsz=(640, 640),  # inference size (height, width)
         conf_thres=0.25,  # confidence threshold
         iou_thres=0.45,  # NMS IOU threshold
@@ -105,6 +105,7 @@ def run(
         device = torch.device(int(device))
     else:
         device = select_device(device)
+    print('device %s'%(device))
     model = DetectMultiBackend(yolo_weights, device=device, dnn=dnn, data=None, fp16=half)
     stride, names, pt = model.stride, model.names, model.pt
     imgsz = check_img_size(imgsz, s=stride)  # check image size
@@ -225,6 +226,7 @@ def run(
     
                         bboxes = output[0:4]
                         id = output[4]
+                        # Comment next line for DeepSORT
                         cls = output[5]
 
                         if save_txt:
@@ -328,7 +330,7 @@ def parse_opt():
 
 
 def main(opt):
-    check_requirements(requirements=ROOT / 'requirements.txt', exclude=('tensorboard', 'thop'))
+    #check_requirements(requirements=ROOT / 'requirements.txt', exclude=('tensorboard', 'thop'))
     run(**vars(opt))
 
 

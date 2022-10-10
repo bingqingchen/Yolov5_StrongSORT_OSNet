@@ -2,3 +2,6 @@
 weights/
 runs/
 results
+clean_ckpt.py
+slurm*
+*/*.slurm
